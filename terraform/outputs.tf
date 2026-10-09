@@ -15,3 +15,14 @@ output "repository_ssh_clone_urls" {
     infra = github_repository.quiznova_infra.ssh_clone_url
   }
 }
+
+output "resource_group_name" {
+  description = "Name of the primary resource group"
+  value       = azurerm_resource_group.main.name
+}
+
+output "resource_group_location" {
+  description = "Location of the primary resource group"
+  value       = azurerm_resource_group.main.location
+}
+
