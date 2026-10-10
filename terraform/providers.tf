@@ -18,6 +18,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 4.0"
     }
+    doppler = {
+      source  = "dopplerhq/doppler"
+      version = "~> 1.13.0"
+    }
   }
 }
 
@@ -34,3 +38,5 @@ provider "azurerm" {
   subscription_id                 = "83ab56f5-88ee-436d-87a5-994d3185bf00"
   resource_provider_registrations = "none"
 }
+
+provider "doppler" {}
