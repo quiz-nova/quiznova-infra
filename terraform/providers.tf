@@ -22,6 +22,10 @@ terraform {
       source  = "dopplerhq/doppler"
       version = "~> 1.13.0"
     }
+    datadog = {
+      source  = "DataDog/datadog"
+      version = "~> 3.53.0"
+    }
   }
 }
 
@@ -40,3 +44,14 @@ provider "azurerm" {
 }
 
 provider "doppler" {}
+
+data "doppler_secrets" "infra" {
+  project = "quiznova-infra"
+  config  = "prd"
+}
+
+provider "datadog" {
+  api_key = data.doppler_secrets.infra.map.DATADOG_API_KEY
+  app_key = data.doppler_secrets.infra.map.DATADOG_APP_KEY
+  api_url = "https://api.us5.datadoghq.com/"
+}
