@@ -78,8 +78,20 @@ if [[ ! -d "$LSTK_AZ_CONFIG" ]] && command -v lstk &>/dev/null; then
 fi
 export AZURE_CONFIG_DIR="$LSTK_AZ_CONFIG"
 
-# Create or refresh localstack_override.tf in the target directory
+# Keep LocalStack's Terraform working data (backend config, providers) outside
+# the target's .terraform/ directory. The real .terraform/ stays initialized
+# against the azurerm backend, so running real terraform afterwards is safe.
+TF_SLUG="$(printf '%s' "$TARGET_PATH" | sed 's|^/||; s|/|_|g')"
+export TF_DATA_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/quiznova-localstack/$TF_SLUG"
+mkdir -p "$TF_DATA_DIR"
+
+# Create localstack_override.tf in the target directory and always remove it on
+# exit (success, failure, or Ctrl+C) so it never leaks into real runs.
 OVERRIDE_FILE="$TARGET_PATH/localstack_override.tf"
+cleanup_override() {
+  rm -f "$OVERRIDE_FILE"
+}
+trap cleanup_override EXIT
 cat << 'EOF' > "$OVERRIDE_FILE"
 # ------------------------------------------------------------------------------
 # LOCALSTACK LOCAL OVERRIDE (AUTOMATICALLY GENERATED - DO NOT COMMIT TO GIT)
@@ -100,10 +112,10 @@ EOF
 
 cd "$TARGET_PATH"
 
-# Check if terraform needs initialization
-if [[ ! -d ".terraform" ]] || [[ ! -f "localstack.tfstate" && "$ACTION" != "init" ]]; then
-  echo "==> Initializing Terraform with LocalStack local backend..."
-  terraform init -reconfigure
+# Initialize the isolated LocalStack data dir on first run or explicit init
+if [[ "$ACTION" == "init" || ! -f "$TF_DATA_DIR/terraform.tfstate" ]]; then
+  echo "==> Initializing Terraform with LocalStack local backend ($TF_DATA_DIR)..."
+  terraform init -reconfigure -input=false
 fi
 
 if [[ "$ACTION" == "init" ]]; then

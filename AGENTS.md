@@ -95,9 +95,12 @@ Use the version-controlled automation scripts in `scripts/`:
 
 #### 1. Terraform against LocalStack (`scripts/localstack-tf.sh`)
 
-Automatically generates a local `localstack_override.tf` (ignored by Git),
-overrides the `azurerm` endpoint to `azure.localhost.localstack.cloud:4566`,
-switches backend state to `localstack.tfstate`, and executes via Doppler:
+Temporarily generates `localstack_override.tf` (ignored by Git), overrides the
+`azurerm` endpoint to `azure.localhost.localstack.cloud:4566`, switches backend
+state to `localstack.tfstate`, and executes via Doppler. Terraform working data
+is isolated in `~/.cache/quiznova-localstack/` (`TF_DATA_DIR`), so the real
+`.terraform/` stays bound to the `azurerm` backend, and the override file is
+deleted on exit (including failures and Ctrl+C):
 
 ```bash
 # Plan changes locally
@@ -109,6 +112,25 @@ switches backend state to `localstack.tfstate`, and executes via Doppler:
 # Target another module (e.g., API environment)
 ./scripts/localstack-tf.sh plan ../quiznova-api/terraform/environments/dev
 ```
+
+> [!WARNING] **Before any real `plan`/`apply`**, confirm no LocalStack override
+> is present and the backend is `azurerm`. If either check fails, delete the
+> override and run `terraform init -reconfigure` first:
+>
+> ```bash
+> test ! -f terraform/localstack_override.tf || echo "STOP: override"
+> jq -r .backend.type \
+>   terraform/.terraform/terraform.tfstate # expect azurerm
+> ```
+>
+> The Doppler provider also needs `DOPPLER_TOKEN`, which `doppler run` does not
+> inject:
+>
+> ```bash
+> export DOPPLER_TOKEN="$(doppler configure get token --plain)"
+> doppler run --project quiznova-infra --config prd -- \
+>   terraform -chdir=terraform apply
+> ```
 
 #### 2. Cross-Machine State Sync via Cloud Pods (`scripts/snapshot-sync.sh`)
 
