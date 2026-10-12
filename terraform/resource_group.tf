@@ -1,4 +1,4 @@
 resource "azurerm_resource_group" "main" {
-  name     = "quiznova-rg"
-  location = "swedencentral"
+  name     = var.resource_group_name
+  location = var.azure_location
 }

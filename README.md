@@ -29,15 +29,18 @@ project).
 
 ## Doppler Configuration
 
-Secrets required for Terraform execution are stored in Doppler under the
-`quiznova-infra` project (`prd` config):
+Sensitive secrets required for Terraform execution are stored in Doppler under
+the `quiznova-infra` project (`prd` config):
 
-| Secret Name                  | Description                                |
-| :--------------------------- | :----------------------------------------- |
-| `GITHUB_OWNER`               | Target GitHub organization (`quiz-nova`)   |
-| `GITHUB_APP_ID`              | GitHub App numeric ID (`5241495`)          |
-| `GITHUB_APP_INSTALLATION_ID` | Organization Installation ID (`169355840`) |
-| `GITHUB_APP_PEM_FILE`        | Raw RSA private key content (PEM format)   |
+| Secret Name           | Description                              |
+| :-------------------- | :--------------------------------------- |
+| `GITHUB_APP_PEM_FILE` | Raw RSA private key content (PEM format) |
+| `DATADOG_API_KEY`     | Datadog API key for observability        |
+| `DATADOG_APP_KEY`     | Datadog Application key for monitors     |
+
+Non-sensitive configuration parameters (such as `GITHUB_OWNER`, `GITHUB_APP_ID`,
+`GITHUB_APP_INSTALLATION_ID`, and `DATADOG_SITE`) are codified as static input
+variables with defaults in `terraform/variables.tf`.
 
 ---
 

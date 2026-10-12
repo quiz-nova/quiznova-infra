@@ -29,29 +29,31 @@ terraform {
   }
 }
 
-# The GitHub provider automatically detects:
-# - GITHUB_OWNER
-# - GITHUB_APP_ID
-# - GITHUB_APP_INSTALLATION_ID
-# - GITHUB_APP_PEM_FILE
-# from environment variables injected by Doppler.
-provider "github" {}
-
-provider "azurerm" {
-  features {}
-  subscription_id                 = "83ab56f5-88ee-436d-87a5-994d3185bf00"
-  resource_provider_registrations = "none"
-}
-
 provider "doppler" {}
 
 data "doppler_secrets" "infra" {
-  project = "quiznova-infra"
-  config  = "prd"
+  project = var.doppler_project
+  config  = var.doppler_config
+}
+
+provider "github" {
+  owner = var.github_owner
+
+  app_auth {
+    id              = var.github_app_id
+    installation_id = var.github_app_installation_id
+    pem_file        = data.doppler_secrets.infra.map.GITHUB_APP_PEM_FILE
+  }
+}
+
+provider "azurerm" {
+  features {}
+  subscription_id                 = var.azure_subscription_id
+  resource_provider_registrations = "none"
 }
 
 provider "datadog" {
   api_key = data.doppler_secrets.infra.map.DATADOG_API_KEY
   app_key = data.doppler_secrets.infra.map.DATADOG_APP_KEY
-  api_url = "https://api.us5.datadoghq.com/"
+  api_url = var.datadog_api_url
 }
