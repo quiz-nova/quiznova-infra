@@ -1,7 +1,7 @@
 data "azurerm_client_config" "current" {}
 
 data "azurerm_storage_account" "state" {
-  name                = "stquiznova"
+  name                = var.storage_account_name
   resource_group_name = azurerm_resource_group.main.name
 }
 
