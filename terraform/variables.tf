@@ -52,6 +52,12 @@ variable "github_owner" {
   default     = "quiz-nova"
 }
 
+variable "github_organization_id" {
+  type        = string
+  description = "Target GitHub organization numeric ID"
+  default     = "325215040"
+}
+
 variable "github_app_id" {
   type        = string
   description = "GitHub App numeric ID"
@@ -64,6 +70,19 @@ variable "github_app_installation_id" {
   default     = "169355840"
 }
 
+variable "azure_admin_object_id" {
+  type        = string
+  description = "Object ID of the primary administrator for storage state access"
+  default     = "0f9822ec-b88c-4077-aead-2a65d6b12ea2"
+}
+
+variable "github_app_pem_file" {
+  type        = string
+  description = "GitHub App Private Key PEM file content (injected via Doppler OIDC)"
+  default     = null
+  sensitive   = true
+}
+
 # ==============================================================================
 # Datadog Observability Configuration
 # ==============================================================================
@@ -72,4 +91,18 @@ variable "datadog_api_url" {
   type        = string
   description = "Datadog API URL endpoint"
   default     = "https://api.us5.datadoghq.com/"
+}
+
+variable "datadog_api_key" {
+  type        = string
+  description = "Datadog API Key (injected via Doppler OIDC)"
+  default     = null
+  sensitive   = true
+}
+
+variable "datadog_app_key" {
+  type        = string
+  description = "Datadog Application Key (injected via Doppler OIDC)"
+  default     = null
+  sensitive   = true
 }
