@@ -10,6 +10,10 @@ terraform {
   }
 
   required_providers {
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 2.47"
+    }
     github = {
       source  = "integrations/github"
       version = "~> 6.0"
@@ -29,7 +33,10 @@ terraform {
   }
 }
 
+provider "azuread" {}
+
 provider "doppler" {}
+
 
 data "doppler_secrets" "infra" {
   project = var.doppler_project
