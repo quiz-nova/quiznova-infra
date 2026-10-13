@@ -90,6 +90,7 @@ jobs:
           doppler-identity-id: ${{ vars.DOPPLER_IDENTITY_ID }}
           doppler-project: quiznova-infra
           doppler-config: prd
+          inject-env-vars: true
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -143,6 +144,7 @@ jobs:
           doppler-identity-id: ${{ vars.DOPPLER_IDENTITY_ID }}
           doppler-project: quiznova-infra
           doppler-config: prd
+          inject-env-vars: true
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
