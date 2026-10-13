@@ -76,7 +76,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Log in to Azure (OIDC)
-        if: ${{ secrets.AZURE_CLIENT_ID != '' }}
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -123,7 +122,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Log in to Azure (OIDC)
-        if: ${{ secrets.AZURE_CLIENT_ID != '' }}
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
