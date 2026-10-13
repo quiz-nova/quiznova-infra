@@ -8,9 +8,27 @@ resource "github_repository" "quiznova_web" {
   has_projects = true
   has_wiki     = true
 
+  security_and_analysis {
+    secret_scanning {
+      status = "enabled"
+    }
+    secret_scanning_push_protection {
+      status = "enabled"
+    }
+  }
+
   lifecycle {
     ignore_changes = [pages]
   }
+}
+
+resource "github_repository_vulnerability_alerts" "quiznova_web" {
+  repository = github_repository.quiznova_web.name
+}
+
+resource "github_repository_dependabot_security_updates" "quiznova_web" {
+  repository = github_repository.quiznova_web.name
+  enabled    = true
 }
 
 resource "github_repository" "quiznova_api" {
@@ -21,6 +39,24 @@ resource "github_repository" "quiznova_api" {
   has_issues   = true
   has_projects = true
   has_wiki     = true
+
+  security_and_analysis {
+    secret_scanning {
+      status = "enabled"
+    }
+    secret_scanning_push_protection {
+      status = "enabled"
+    }
+  }
+}
+
+resource "github_repository_vulnerability_alerts" "quiznova_api" {
+  repository = github_repository.quiznova_api.name
+}
+
+resource "github_repository_dependabot_security_updates" "quiznova_api" {
+  repository = github_repository.quiznova_api.name
+  enabled    = true
 }
 
 resource "github_repository" "quiznova_infra" {
@@ -31,4 +67,25 @@ resource "github_repository" "quiznova_infra" {
   has_issues   = true
   has_projects = true
   has_wiki     = true
+
+  security_and_analysis {
+    secret_scanning {
+      status = "enabled"
+    }
+    secret_scanning_push_protection {
+      status = "enabled"
+    }
+  }
 }
+
+resource "github_repository_vulnerability_alerts" "quiznova_infra" {
+  repository = github_repository.quiznova_infra.name
+}
+
+resource "github_repository_dependabot_security_updates" "quiznova_infra" {
+  repository = github_repository.quiznova_infra.name
+  enabled    = true
+}
+
+
+
