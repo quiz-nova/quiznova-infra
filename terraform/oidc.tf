@@ -65,4 +65,3 @@ resource "github_actions_secret" "infra_azure_subscription_id" {
   secret_name = "AZURE_SUBSCRIPTION_ID"
   value       = var.azure_subscription_id
 }
-
