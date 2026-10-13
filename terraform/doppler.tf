@@ -37,3 +37,16 @@ import {
   to = doppler_service_account.github_actions
   id = "c1fb068e-3eb4-466c-90b9-898f1aa9893e"
 }
+
+# Service Account Token for GitHub Actions CI/CD
+resource "doppler_service_account_token" "github_actions" {
+  name                 = "github-actions-infra-token"
+  service_account_slug = doppler_service_account.github_actions.slug
+}
+
+# Codified GitHub Actions Secret for Doppler authentication
+resource "github_actions_secret" "infra_doppler_token" {
+  repository  = github_repository.quiznova_infra.name
+  secret_name = "DOPPLER_TOKEN"
+  value       = doppler_service_account_token.github_actions.api_key
+}

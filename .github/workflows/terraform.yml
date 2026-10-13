@@ -101,8 +101,10 @@ jobs:
 
       - name: Generate Terraform Plan
         id: plan
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          terraform plan -no-color -out=tfplan
+          terraform plan -input=false -no-color -out=tfplan
           terraform show -no-color tfplan > plan_summary.txt
           echo "### Terraform Plan Summary" >> $GITHUB_STEP_SUMMARY
           echo '```hcl' >> $GITHUB_STEP_SUMMARY
@@ -146,4 +148,6 @@ jobs:
         run: terraform init
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        run: terraform apply -input=false -auto-approve
