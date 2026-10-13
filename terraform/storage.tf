@@ -8,7 +8,7 @@ data "azurerm_storage_account" "state" {
 resource "azurerm_role_assignment" "current_user_blob" {
   scope                = data.azurerm_storage_account.state.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = data.azurerm_client_config.current.object_id
+  principal_id         = var.azure_admin_object_id
 }
 
 resource "azurerm_storage_container" "infra_tfstate" {
