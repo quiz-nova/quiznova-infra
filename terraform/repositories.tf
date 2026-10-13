@@ -86,6 +86,3 @@ resource "github_repository_dependabot_security_updates" "quiznova_infra" {
   repository = github_repository.quiznova_infra.name
   enabled    = true
 }
-
-
-
