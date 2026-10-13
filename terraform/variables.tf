@@ -52,6 +52,12 @@ variable "github_owner" {
   default     = "quiz-nova"
 }
 
+variable "github_organization_id" {
+  type        = string
+  description = "Target GitHub organization numeric ID"
+  default     = "325215040"
+}
+
 variable "github_app_id" {
   type        = string
   description = "GitHub App numeric ID"

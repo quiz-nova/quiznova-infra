@@ -11,16 +11,18 @@ resource "azuread_service_principal" "infra" {
 }
 
 locals {
+  github_oidc_issuer = "https://token.actions.githubusercontent.com"
+  azuread_token_aud  = "api://AzureADTokenExchange"
   # GitHub Actions immutable subject format: repo:<OWNER>@<OWNER-ID>/<REPO>@<REPO-ID>
-  infra_repo_subject = "repo:${var.github_owner}@325215040/quiznova-infra@1410834372"
+  infra_repo_subject = "repo:${var.github_owner}@${var.github_organization_id}/${github_repository.quiznova_infra.name}@${github_repository.quiznova_infra.repo_id}"
 }
 
 resource "azuread_application_federated_identity_credential" "infra_main" {
   application_id = azuread_application.infra.id
   display_name   = "github-actions-quiznova-infra-main"
   description    = "Federated credential for quiznova-infra main branch deployment"
-  audiences      = ["api://AzureADTokenExchange"]
-  issuer         = "https://token.actions.githubusercontent.com"
+  audiences      = [local.azuread_token_aud]
+  issuer         = local.github_oidc_issuer
   subject        = "${local.infra_repo_subject}:ref:refs/heads/main"
 }
 
@@ -28,8 +30,8 @@ resource "azuread_application_federated_identity_credential" "infra_pr" {
   application_id = azuread_application.infra.id
   display_name   = "github-actions-quiznova-infra-pr"
   description    = "Federated credential for quiznova-infra pull requests"
-  audiences      = ["api://AzureADTokenExchange"]
-  issuer         = "https://token.actions.githubusercontent.com"
+  audiences      = [local.azuread_token_aud]
+  issuer         = local.github_oidc_issuer
   subject        = "${local.infra_repo_subject}:pull_request"
 }
 
