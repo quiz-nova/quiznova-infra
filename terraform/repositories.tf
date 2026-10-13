@@ -29,6 +29,7 @@ resource "github_repository_vulnerability_alerts" "quiznova_web" {
 resource "github_repository_dependabot_security_updates" "quiznova_web" {
   repository = github_repository.quiznova_web.name
   enabled    = true
+  depends_on = [github_repository_vulnerability_alerts.quiznova_web]
 }
 
 resource "github_repository" "quiznova_api" {
@@ -57,6 +58,7 @@ resource "github_repository_vulnerability_alerts" "quiznova_api" {
 resource "github_repository_dependabot_security_updates" "quiznova_api" {
   repository = github_repository.quiznova_api.name
   enabled    = true
+  depends_on = [github_repository_vulnerability_alerts.quiznova_api]
 }
 
 resource "github_repository" "quiznova_infra" {
@@ -85,4 +87,6 @@ resource "github_repository_vulnerability_alerts" "quiznova_infra" {
 resource "github_repository_dependabot_security_updates" "quiznova_infra" {
   repository = github_repository.quiznova_infra.name
   enabled    = true
+  depends_on = [github_repository_vulnerability_alerts.quiznova_infra]
 }
+
