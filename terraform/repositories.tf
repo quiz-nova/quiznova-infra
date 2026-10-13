@@ -89,4 +89,3 @@ resource "github_repository_dependabot_security_updates" "quiznova_infra" {
   enabled    = true
   depends_on = [github_repository_vulnerability_alerts.quiznova_infra]
 }
-
