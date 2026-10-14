@@ -5,7 +5,7 @@ resource "github_repository" "quiznova_web" {
   visibility   = "public"
 
   has_issues   = true
-  has_projects = true
+  has_projects = false
   has_wiki     = true
 
   security_and_analysis {
@@ -38,7 +38,7 @@ resource "github_repository" "quiznova_api" {
   visibility  = "public"
 
   has_issues   = true
-  has_projects = true
+  has_projects = false
   has_wiki     = true
 
   security_and_analysis {
@@ -67,7 +67,7 @@ resource "github_repository" "quiznova_infra" {
   visibility  = "public"
 
   has_issues   = true
-  has_projects = true
+  has_projects = false
   has_wiki     = true
 
   security_and_analysis {
