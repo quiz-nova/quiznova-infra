@@ -1,0 +1,18 @@
+# LocalStack Configuration for QuizNova Azure Emulator
+
+[metadata]
+project = "quiznova"
+owner = "moamenelbarky"
+contact = "moamen.elbarky@gmail.com"
+emulator = "azure"
+version = "1.0.0"
+schema_version = "2026-10"
+default_pod = "quiznova-localstack-base"
+
+[[containers]]
+type = "azure"
+port = "4566"
+
+[containers.env]
+PERSISTENCE = "1"
+GATEWAY_LISTEN = "0.0.0.0:4566"
