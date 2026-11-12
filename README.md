@@ -1,78 +1,107 @@
 # QuizNova Infrastructure
 
-Platform Infrastructure as Code for the `quiz-nova` GitHub organization, managed
-via Terraform, Doppler, and GitHub App automation.
+Platform Infrastructure as Code for the
+[`quiz-nova`](https://github.com/quiz-nova) organization, managed by
+[Moamen Elbarky](https://github.com/moamenelbarky) using **Terraform**,
+**Doppler**, and **GitHub Actions**.
+
+**Live Application:** [quiznova.dev](https://quiznova.dev) _(Fallback:
+[GitHub Pages](https://moamenelbarqy.github.io/quiz-nova/))_
+
+> [!NOTE] **Demo Notice:** This infrastructure supports a demonstration and
+> learning project. Serverless containers scale to zero (causing 10–15s initial
+> cold starts), and live services may pause if free-tier cloud credits run out.
 
 ---
 
 ## Overview
 
-This repository serves as the single source of truth for the `quiz-nova` GitHub
-organization. All organization repositories, configurations, and platform-level
-resources are managed declaratively using Terraform without manual changes in
-the GitHub dashboard.
+This repository acts as the foundational control plane (`terraform/`) for the
+QuizNova project:
 
-Authentication to GitHub is handled by an organization-scoped GitHub App
-(`quiznova-terraform-bot`), eliminating dependency on personal access tokens.
-Credentials and secrets are managed centrally in Doppler (`quiznova-infra`
-project).
+- **GitHub Organization (`repositories.tf`, `environments.tf`)**: Manages public
+  repositories, deployment environments (`development`, `staging`,
+  `production`), and branch rules via a GitHub App (`quiznova-terraform-bot`).
+- **Azure Foundation (`resource_group.tf`, `storage.tf`, `oidc.tf`)**:
+  Provisions the shared resource group (`quiznova-rg`), remote Terraform state
+  blob containers (`stquiznova`), and passwordless GitHub Actions OIDC identity
+  federation.
+- **Observability (`datadog.tf`)**: Configures Datadog error-rate monitors for
+  the backend API.
+
+```mermaid
+flowchart TD
+    Infra["quiznova-infra (Terraform)"] -->|Manages Repos & Environments| GH["GitHub Org (quiz-nova)"]
+    Infra -->|Provisions RG, State Storage & OIDC| Azure["Azure Foundation (quiznova-rg / stquiznova)"]
+    Infra -->|Configures Monitors| DD["Datadog"]
+
+    API["quiznova-api"] -.->|Stores tfstate in| Azure
+    Web["quiznova-web"] -.->|Stores tfstate in| Azure
+```
+
+For the story behind moving from manual Azure Portal clicks to Terraform and
+Doppler, see the project wiki:
+
+- [Infrastructure as Code (IaC) Journey](https://github.com/quiz-nova/quiznova-api/wiki/IaC)
+- [Managing Secrets with Doppler](https://github.com/quiz-nova/quiznova-api/wiki/Doppler)
 
 ---
 
-## Prerequisites
+## Secrets & Doppler
 
-- [Terraform](https://www.terraform.io/) (>= 1.5.0)
-- [Doppler CLI](https://docs.doppler.com/docs/cli)
-- GitHub organization access to `quiz-nova`
+Sensitive values required during Terraform runs are stored in **Doppler** under
+the `quiznova-infra` project (`prd` config) and injected at runtime:
 
----
+| Secret Name           | Purpose                            |
+| :-------------------- | :--------------------------------- |
+| `GITHUB_APP_PEM_FILE` | RSA private key for the GitHub App |
+| `DATADOG_API_KEY`     | Datadog API key                    |
+| `DATADOG_APP_KEY`     | Datadog Application key            |
 
-## Doppler Configuration
-
-Sensitive secrets required for Terraform execution are stored in Doppler under
-the `quiznova-infra` project (`prd` config):
-
-| Secret Name           | Description                              |
-| :-------------------- | :--------------------------------------- |
-| `GITHUB_APP_PEM_FILE` | Raw RSA private key content (PEM format) |
-| `DATADOG_API_KEY`     | Datadog API key for observability        |
-| `DATADOG_APP_KEY`     | Datadog Application key for monitors     |
-
-Non-sensitive configuration parameters (such as `GITHUB_OWNER`, `GITHUB_APP_ID`,
-`GITHUB_APP_INSTALLATION_ID`, and `DATADOG_SITE`) are codified as static input
-variables with defaults in `terraform/variables.tf`.
+Non-sensitive defaults live in `terraform/variables.tf`.
 
 ---
 
 ## Quick Start
 
-### 1. Initialize Terraform
+### Prerequisites
+
+- [Terraform](https://www.terraform.io/) (`>= 1.5.0`)
+- [Doppler CLI](https://docs.doppler.com/docs/cli)
+
+### Run Terraform via Doppler
 
 ```bash
+# Initialize backend
 doppler run --project quiznova-infra --config prd -- \
   terraform -chdir=terraform init
-```
 
-### 2. Plan Changes
-
-```bash
+# Preview changes
 doppler run --project quiznova-infra --config prd -- \
   terraform -chdir=terraform plan
-```
 
-### 3. Apply Changes
-
-```bash
+# Apply changes
 doppler run --project quiznova-infra --config prd -- \
   terraform -chdir=terraform apply
 ```
 
+In CI/CD, `.github/workflows/terraform.yml` validates formatting, runs Checkov
+security checks, plans on pull requests, and applies automatically on merges to
+`main` using Azure and Doppler OIDC.
+
 ---
 
-## Managed Repositories
+## Organization Repositories
 
-| Repository       | Visibility | Description                     |
-| :--------------- | :--------- | :------------------------------ |
-| `quiznova-web`   | Public     | QuizNova Web Application        |
-| `quiznova-api`   | Public     | QuizNova Backend API            |
-| `quiznova-infra` | Public     | Platform Infrastructure as Code |
+| Repository                                                            | Purpose                               |
+| :-------------------------------------------------------------------- | :------------------------------------ |
+| [`quiznova-api`](https://github.com/quiz-nova/quiznova-api)           | .NET 10 Backend API                   |
+| [`quiznova-web`](https://github.com/quiz-nova/quiznova-web)           | Angular 21 Web Application            |
+| [`quiznova-infra`](https://github.com/quiz-nova/quiznova-infra)       | Platform Infrastructure as Code       |
+| [`quiznova-api.wiki`](https://github.com/quiz-nova/quiznova-api/wiki) | Architecture Notes & Learning Journey |
+
+---
+
+## Author
+
+Developed by **[Moamen Elbarky](https://github.com/moamenelbarky)**.

@@ -17,16 +17,17 @@ single source of truth for the `quiz-nova` organization.
    - Platform Infrastructure as Code managed via Terraform and GitHub App
      automation (`quiznova-terraform-bot`).
    - Provisions organization repositories, environment branch protection rules,
-     Doppler service account memberships, and foundational Azure resources
-     (resource group `quiznova-rg`, storage account `stquiznova`, and tfstate
-     blob containers).
+     Azure OIDC workload identities, and foundational Azure resources (resource
+     group `quiznova-rg`, storage account `stquiznova`, and tfstate blob
+     containers).
 2. **`quiznova-api` (`../quiznova-api`)**:
-   - Backend service built with .NET 9 (ASP.NET Core Clean Architecture).
-   - Backed by PostgreSQL and MongoDB Atlas.
+   - Backend service built with .NET 10 (ASP.NET Core Clean Architecture).
+   - Stores domain data in MongoDB Atlas and uses PostgreSQL for the
+     Transactional Outbox pattern and Identity.
    - Deployed as Azure Container Apps (`quiznova-api-dev`, `stg`, `prd`) using
      Managed Identities for Azure Key Vault secret access.
 3. **`quiznova-web` (`../quiznova-web`)**:
-   - Single Page Application built with Angular 19.
+   - Single Page Application built with Angular 21.
    - Production is hosted on **GitHub Pages CDN** for apex domain `quiznova.dev`
      and `www`.
    - Development and staging previews run as Azure Container Apps
@@ -121,15 +122,6 @@ deleted on exit (including failures and Ctrl+C):
 > test ! -f terraform/localstack_override.tf || echo "STOP: override"
 > jq -r .backend.type \
 >   terraform/.terraform/terraform.tfstate # expect azurerm
-> ```
->
-> The Doppler provider also needs `DOPPLER_TOKEN`, which `doppler run` does not
-> inject:
->
-> ```bash
-> export DOPPLER_TOKEN="$(doppler configure get token --plain)"
-> doppler run --project quiznova-infra --config prd -- \
->   terraform -chdir=terraform apply
 > ```
 
 #### 2. Cross-Machine State Sync via Cloud Pods (`scripts/snapshot-sync.sh`)
