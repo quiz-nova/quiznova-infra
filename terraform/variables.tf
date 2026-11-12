@@ -106,3 +106,24 @@ variable "datadog_app_key" {
   default     = null
   sensitive   = true
 }
+
+# ==============================================================================
+# Metadata & Governance Tags
+# ==============================================================================
+
+variable "common_tags" {
+  type        = map(string)
+  description = "Baseline metadata tags applied to platform resources"
+  default = {
+    Project    = "quiznova"
+    ManagedBy  = "terraform"
+    Repository = "quiznova-infra"
+    Owner      = "moamenelbarky"
+  }
+}
+
+variable "homepage_url" {
+  type        = string
+  description = "Default homepage URL for QuizNova organization repositories"
+  default     = "https://quiznova.dev"
+}

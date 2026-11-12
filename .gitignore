@@ -28,4 +28,5 @@ terraform.rc
 # LocalStack
 localstack_*.tf
 localstack.tfstate*
-.lstk/
+.lstk/*
+!.lstk/config.toml

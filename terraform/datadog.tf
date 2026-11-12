@@ -13,10 +13,16 @@
 # ==============================================================================
 
 resource "datadog_monitor" "api_error_rate" {
-  name               = "QuizNova API Elevated 5xx Error Rate"
-  type               = "metric alert"
-  message            = "QuizNova API 5xx error rate has exceeded 5% in {{env.name}}! Notify: @devops"
-  tags               = ["service:quiznova-api", "env:prd"]
+  name    = "QuizNova API Elevated 5xx Error Rate"
+  type    = "metric alert"
+  message = "QuizNova API 5xx error rate has exceeded 5% in {{env.name}}! Notify: @moamenelbarky"
+  tags = [
+    "service:quiznova-api",
+    "env:prd",
+    "tier:api",
+    "priority:p2",
+    "managed-by:terraform"
+  ]
   escalation_message = "QuizNova API errors still elevated after 15 minutes."
 
   query = "sum(last_10m):sum:trace.aspnet_core.request.errors{service:quiznova-api,env:prd} by {env}.as_count() / sum:trace.aspnet_core.request.hits{service:quiznova-api,env:prd} by {env}.as_count() > 0.05"

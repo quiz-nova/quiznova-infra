@@ -1,0 +1,22 @@
+schema-version: v2.2
+dd-service: quiznova-infra
+application: quiznova
+tier: infrastructure
+type: ops
+lifecycle: production
+description: QuizNova GitHub organization infrastructure, environments, and platform automation (Terraform, GitHub App)
+languages:
+  - hcl
+  - terraform
+  - bash
+contacts:
+  - type: email
+    contact: moamen.elbarky@gmail.com
+links:
+  - name: GitHub Repository
+    type: repo
+    url: https://github.com/quiz-nova/quiznova-infra
+tags:
+  - env:prd
+  - project:quiznova
+  - framework:terraform
