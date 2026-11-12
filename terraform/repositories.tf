@@ -1,12 +1,26 @@
 resource "github_repository" "quiznova_web" {
   name         = "quiznova-web"
-  description  = "QuizNova Web Application"
-  homepage_url = "quiznova.dev"
+  description  = "QuizNova Single Page Application built with Angular 21 and PrimeNG"
+  homepage_url = var.homepage_url
   visibility   = "public"
+
+  topics = [
+    "quiznova",
+    "angular",
+    "typescript",
+    "primeng",
+    "datadog-rum",
+    "spa"
+  ]
 
   has_issues   = true
   has_projects = false
-  has_wiki     = true
+  has_wiki     = false
+
+  delete_branch_on_merge = true
+  allow_squash_merge     = true
+  allow_merge_commit     = false
+  allow_rebase_merge     = false
 
   security_and_analysis {
     secret_scanning {
@@ -33,13 +47,32 @@ resource "github_repository_dependabot_security_updates" "quiznova_web" {
 }
 
 resource "github_repository" "quiznova_api" {
-  name        = "quiznova-api"
-  description = "QuizNova Backend API"
-  visibility  = "public"
+  name         = "quiznova-api"
+  description  = "QuizNova Backend API built with .NET 10, ASP.NET Core Clean Architecture, MongoDB, and PostgreSQL"
+  homepage_url = var.homepage_url
+  visibility   = "public"
+
+  topics = [
+    "quiznova",
+    "dotnet",
+    "csharp",
+    "aspnetcore",
+    "clean-architecture",
+    "mongodb",
+    "postgresql",
+    "opentelemetry",
+    "datadog",
+    "azure-container-apps"
+  ]
 
   has_issues   = true
   has_projects = false
   has_wiki     = true
+
+  delete_branch_on_merge = true
+  allow_squash_merge     = true
+  allow_merge_commit     = false
+  allow_rebase_merge     = false
 
   security_and_analysis {
     secret_scanning {
@@ -62,13 +95,30 @@ resource "github_repository_dependabot_security_updates" "quiznova_api" {
 }
 
 resource "github_repository" "quiznova_infra" {
-  name        = "quiznova-infra"
-  description = "Platform Infrastructure as Code for QuizNova organization managed via Terraform and GitHub App"
-  visibility  = "public"
+  name         = "quiznova-infra"
+  description  = "Infrastructure as Code for QuizNova GitHub organization repositories, environments, Doppler secrets, and platform automation"
+  homepage_url = var.homepage_url
+  visibility   = "public"
+
+  topics = [
+    "quiznova",
+    "github-management",
+    "infrastructure-as-code",
+    "terraform",
+    "github-app",
+    "doppler",
+    "github-actions",
+    "localstack"
+  ]
 
   has_issues   = true
   has_projects = false
-  has_wiki     = true
+  has_wiki     = false
+
+  delete_branch_on_merge = true
+  allow_squash_merge     = true
+  allow_merge_commit     = false
+  allow_rebase_merge     = false
 
   security_and_analysis {
     secret_scanning {
