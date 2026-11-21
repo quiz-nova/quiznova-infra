@@ -21,6 +21,7 @@ resource "github_repository" "quiznova_web" {
   allow_squash_merge     = true
   allow_merge_commit     = false
   allow_rebase_merge     = false
+  allow_auto_merge       = true
 
   security_and_analysis {
     secret_scanning {
@@ -73,6 +74,7 @@ resource "github_repository" "quiznova_api" {
   allow_squash_merge     = true
   allow_merge_commit     = false
   allow_rebase_merge     = false
+  allow_auto_merge       = true
 
   security_and_analysis {
     secret_scanning {
@@ -119,6 +121,7 @@ resource "github_repository" "quiznova_infra" {
   allow_squash_merge     = true
   allow_merge_commit     = false
   allow_rebase_merge     = false
+  allow_auto_merge       = true
 
   security_and_analysis {
     secret_scanning {
