@@ -2,7 +2,7 @@ data "azurerm_client_config" "current" {}
 
 data "azurerm_storage_account" "state" {
   name                = var.storage_account_name
-  resource_group_name = azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_role_assignment" "current_user_blob" {
