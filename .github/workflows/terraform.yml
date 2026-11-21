@@ -15,7 +15,7 @@ permissions:
 jobs:
   validate:
     name: Validate Configuration
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     defaults:
       run:
         working-directory: terraform
@@ -39,7 +39,7 @@ jobs:
 
   iac-security:
     name: Checkov IaC Security Scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       security-events: write
@@ -67,7 +67,7 @@ jobs:
     name: Terraform Plan
     needs: [validate, iac-security]
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     defaults:
       run:
         working-directory: terraform
@@ -121,7 +121,7 @@ jobs:
     name: Terraform Apply
     needs: [validate, iac-security]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     defaults:
       run:
         working-directory: terraform
